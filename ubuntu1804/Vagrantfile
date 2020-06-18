@@ -86,9 +86,9 @@ Vagrant.configure("2") do |config|
     # Install zsh and change zsh
     sudo apt-get install -y zsh
     chsh -s /usr/bin/zsh
-    ln -s ~/repos/dotfiles/zsh/.zshrc ~/.zshrc
-    ln -s ~/repos/dotfiles/zsh/.zsh_aliases ~/.zsh_aliases
-    source ~/.zshrc
+    ln -s /home/vagrant/repos/dotfiles/zsh/.zshrc /home/vagrant/.zshrc
+    ln -s /home/vagrant/repos/dotfiles/zsh/.zsh_aliases /home/vagrant/.zsh_aliases
+    source /home/vagrant/.zshrc
 
     # Install Docker
     sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
@@ -114,7 +114,7 @@ Vagrant.configure("2") do |config|
 
     # Install Anaconda for yourself
     sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh
-    mkdir ~/libs
+    mkdir /home/vagrant/libs
 
   SHELL
 end
