@@ -1,6 +1,19 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+boxes = [
+    {
+        :eth1 => "192.168.33.10",
+        :mem => "2048",
+        :cpu => "2",
+        :disk => "30GB"
+    },
+]
+
+user="vagrant"
+group="vagrant"
+user_home="/home/vagrant"
+
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
@@ -10,43 +23,6 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-
-  # Change vm disk size. install this plugin to enable this command
-  # vagrant plugin install vagrant-disksize
-  config.disksize.size = "30GB"
-
-
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
-  config.vm.box = "ubuntu/bionic64"
-
-
-
-  # Disable automatic box update checking. If you disable this, then
-  # boxes will only be checked for updates when the user runs
-  # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
-
-  # Create a forwarded port mapping which allows access to a specific port
-  # within the machine from a port on the host machine. In the example below,
-  # accessing "localhost:8080" will access port 80 on the guest machine.
-  # NOTE: This will enable public access to the opened port
-  # config.vm.network "forwarded_port", guest: 80, host: 8080
-  # ----------
-  # For Jupyter notebook
-  config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
-  config.vm.network "forwarded_port", guest: 4000, host: 4000, host_ip: "127.0.0.1"
-
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
-
-  # Create a public network, which generally matched to bridged network.
-  # Bridged networks make the machine appear as another physical device on
-  # your network.
-  # config.vm.network "public_network"
-
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
@@ -54,67 +30,107 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder "~/repos", "/home/vagrant/repos"
   config.vm.synced_folder "~/temp", "/home/vagrant/temp"
 
+  boxes.each do |opts|
+    # Change vm disk size. install this plugin to enable this command
+    # vagrant plugin install vagrant-disksize
+    config.disksize.size = opts[:disk]
 
-  # Provider-specific configuration so you can fine-tune various
-  # backing providers for Vagrant. These expose provider-specific options.
-  # Example for VirtualBox:
-  #
-  config.vm.provider "virtualbox" do |vb|
-    # Display the VirtualBox GUI when booting the machine
-    # vb.gui = true
 
-    # Customize the amount of memory on the VM:
-    vb.memory = "4096"
+    # Every Vagrant development environment requires a box. You can search for
+    # boxes at https://vagrantcloud.com/search.
+    config.vm.box = "ubuntu/bionic64"
 
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+
+
+    # Disable automatic box update checking. If you disable this, then
+    # boxes will only be checked for updates when the user runs
+    # `vagrant box outdated`. This is not recommended.
+    # config.vm.box_check_update = false
+
+    # Create a forwarded port mapping which allows access to a specific port
+    # within the machine from a port on the host machine. In the example below,
+    # accessing "localhost:8080" will access port 80 on the guest machine.
+    # NOTE: This will enable public access to the opened port
+    # config.vm.network "forwarded_port", guest: 80, host: 8080
+    # ----------
+    # For Jupyter notebook
+    config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+    config.vm.network "forwarded_port", guest: 4000, host: 4000, host_ip: "127.0.0.1"
+
+    # Create a private network, which allows host-only access to the machine
+    # using a specific IP.
+    config.vm.network "private_network", ip: opts[:eth1]
+
+    # Create a public network, which generally matched to bridged network.
+    # Bridged networks make the machine appear as another physical device on
+    # your network.
+    # config.vm.network "public_network"
+
+    # Provider-specific configuration so you can fine-tune various
+    # backing providers for Vagrant. These expose provider-specific options.
+    # Example for VirtualBox:
+    #
+    config.vm.provider "virtualbox" do |vb|
+      # Display the VirtualBox GUI when booting the machine
+      # vb.gui = true
+
+      # Customize the amount of memory on the VM:
+      vb.memory = opts[:mem]
+      vb.cpus = opts[:cpu]
+
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    end
+
+    # View the documentation for the provider you are using for more
+    # information on available options.
+
+    # Enable provisioning with a shell script. Additional provisioners such as
+    # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
+    # documentation for more information about their specific syntax and use.
+    # config.vm.provision "shell", inline: <<-SHELL
+    #   apt-get update
+    #   apt-get install -y apache2
+    # SHELL
+    config.vm.provision "shell", inline: <<-SHELL
+      apt-get update
+      # install base package
+      apt-get install -y wget
+      apt-get install -y zsh
+      apt-get install -y expect
+
+      # Install Docker
+      apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      apt-key fingerprint 0EBFCD88
+      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      apt-get update
+      apt-get install -y docker-ce
+      usermod -aG docker vagrant
+
+      # Install docker-compose
+      curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      chmod +x /usr/local/bin/docker-compose
+
+      # install nodejs & npm
+      apt-get install -y nodejs npm
+      npm update -g npm
+      npm install -g -y n
+      n stable
+      apt purge -y nodejs
+      npm install -g -y npm-check-updates
+      npm install -g create-react-app
+
+      # Create libs directory
+      mkdir #{user_home}/libs
+
+      # zsh setup
+      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_zsh.sh #{user_home}
+      chsh -s $(which zsh)
+      chsh -s $(which zsh) #{user}
+
+      # Anaconda setup
+      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_anaconda.sh
+    SHELL
   end
-  #
-  # View the documentation for the provider you are using for more
-  # information on available options.
-
-  # Enable provisioning with a shell script. Additional provisioners such as
-  # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
-  # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
-  config.vm.provision "shell", inline: <<-SHELL
-    sudo apt-get update
-    sudo apt-get install -y wget
-
-    # Install zsh and change zsh
-    sudo apt-get install -y zsh
-    chsh -s /usr/bin/zsh
-    ln -s /home/vagrant/repos/dotfiles/zsh/.zshrc /home/vagrant/.zshrc
-    ln -s /home/vagrant/repos/dotfiles/zsh/.zsh_aliases /home/vagrant/.zsh_aliases
-    source /home/vagrant/.zshrc
-
-    # Install Docker
-    sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo apt-key fingerprint 0EBFCD88
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-    sudo apt-get update
-    sudo apt-get install -y docker-ce
-    sudo usermod -aG docker vagrant
-
-    # Install docker-compose
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-
-    # install nodejs & npm
-    sudo apt-get install -y nodejs npm
-    sudo npm update -g npm
-    sudo npm install -g -y n
-    sudo n stable
-    sudo apt purge -y nodejs
-    sudo npm install -g -y npm-check-updates
-
-
-    # Install Anaconda for yourself
-    sudo wget https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh
-    mkdir /home/vagrant/libs
-
-  SHELL
 end
