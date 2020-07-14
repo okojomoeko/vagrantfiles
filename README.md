@@ -31,6 +31,7 @@
   - npm
   - nodejs
   - Anaconda3
+    - grant access permission ```sudo chown -R vagrant /home/vagrant/libs/anaconda3```
 
 ## Requirements
 
