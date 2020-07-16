@@ -125,12 +125,12 @@ Vagrant.configure("2") do |config|
       mkdir #{user_home}/libs
 
       # zsh setup
-      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_zsh.sh #{user_home}
+      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_zshrc.sh #{user_home}
       chsh -s $(which zsh)
       chsh -s $(which zsh) #{user}
 
       # Anaconda setup
-      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_anaconda.sh
+      sudo -u #{user} -i #{user_home}/repos/vagrantfiles/ubuntu1804/shell/setup_anaconda.sh #{user_home}
     SHELL
   end
 end
