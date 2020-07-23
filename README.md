@@ -1,14 +1,5 @@
 # vagrantfiles
 
-## Requirements
-
-- directory
-  - ~/repos
-  - ~/temp
-- zsh
-  - ~/repos/dotfiles/zsh/.zshrc
-  - ~/repos/dotfiles/zsh/.zsh_aliases
-
 ## Configuration
 
 - Port forwarding
@@ -35,7 +26,19 @@
 
 ## Requirements
 
+### Host OS Folder Structure
+
+- directory
+  - ~/repos
+  - ~/temp
+- zsh
+  - ~/repos/dotfiles/zsh/.zshrc
+  - ~/repos/dotfiles/zsh/.zsh_aliases
+
+### Vagrant plugins
+
 - vagrant-disksize: `vagrant plugin install vagrant-disksize`
+- vagrant-winnfsd: `vagrant plugin install vagrant-winnfsd`
 
 ## Usage
 
