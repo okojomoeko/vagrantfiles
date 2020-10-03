@@ -23,7 +23,7 @@
   - npm
   - nodejs
   - Anaconda3
-    - grant access permission ```sudo chown -R vagrant /home/vagrant/libs/anaconda3```
+    - grant access permission `sudo chown -R vagrant /home/vagrant/libs/anaconda3`
 
 ## Requirements
 
@@ -41,10 +41,11 @@
 - vagrant-disksize: `vagrant plugin install vagrant-disksize`
 
 ### Host OS Setting
+
 - Open PowerShell as administrator and set behavior and check
   - `fsutil behavior set SymlinkEvaluation L2L:1 R2R:1 L2R:1 R2L:1`
   - `fsutil behavior query symlinkevaluation`
-  
+
 ## Usage
 
 `$ vagrant up --provision`
