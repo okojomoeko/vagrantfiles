@@ -7,6 +7,7 @@
   - 8888: for using jupyter
   - 8080: for http test
   - 4000: for DB server test
+  - 3000: for react app
 
 - Shared folder
 

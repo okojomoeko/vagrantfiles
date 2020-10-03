@@ -4,7 +4,7 @@
 boxes = [
     {
         :eth1 => "192.168.33.10",
-        :mem => "2048",
+        :mem => "4096",
         :cpu => "2",
         :disk => "30GB"
     },
@@ -55,8 +55,12 @@ Vagrant.configure("2") do |config|
     # ----------
     # For Jupyter notebook
     config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
+    # For web
     config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
+
     config.vm.network "forwarded_port", guest: 4000, host: 4000, host_ip: "127.0.0.1"
+    # For React
+    config.vm.network "forwarded_port", guest: 3000, host: 3000, host_ip: "127.0.0.1"
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
@@ -78,7 +82,7 @@ Vagrant.configure("2") do |config|
       # Customize the amount of memory on the VM:
       vb.memory = opts[:mem]
       vb.cpus = opts[:cpu]
-
+      vb.customize ['modifyvm', :id, '--cableconnected1', 'on']
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/.","1"]
     end
