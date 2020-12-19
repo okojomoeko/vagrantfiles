@@ -104,40 +104,46 @@ Vagrant.configure("2") do |config|
       apt install -y zsh
       apt install -y expect
 
-      # Install Docker
-      apt install -y apt-transport-https ca-certificates curl software-properties-common
-      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-      apt-key fingerprint 0EBFCD88
-      add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-      apt update
-      apt install -y docker-ce
-      usermod -aG docker vagrant
+      # # Install Docker
+      # apt install -y apt-transport-https ca-certificates curl software-properties-common
+      # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+      # apt-key fingerprint 0EBFCD88
+      # add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      # apt update
+      # apt install -y docker-ce
+      # usermod -aG docker vagrant
 
-      # Install docker-compose
-      curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-      chmod +x /usr/local/bin/docker-compose
+      # # Install docker-compose
+      # curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+      # chmod +x /usr/local/bin/docker-compose
 
-      # install nodejs & npm
-      apt install -y nodejs npm
-      npm update -g npm
-      npm install -g -y n
-      n stable
-      apt purge -y nodejs
-      npm install -g -y npm-check-updates
+      # # install nodejs & npm
+      # apt install -y nodejs npm
+      # npm update -g npm
+      # npm install -g -y n
+      # n stable
+      # apt purge -y nodejs
+      # npm install -g -y npm-check-updates
 
-      git clone https://github.com/okojomoeko/vagrantfiles.git
-      git clone https://github.com/okojomoeko/dotfiles.git
+      if [ ! -e #{user_home}/repos/dotfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/dotfiles.git #{user_home}/repos/dotfiles
+      fi
+      if [ ! -e #{user_home}/temp/vagrantfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/vagrantfiles.git #{user_home}/temp/vagrantfiles
+      fi
+
+      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zshrc #{user_home}/.zshrc
+      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zsh_aliases #{user_home}/.zsh_aliases
 
       # Create libs directory
       sudo -u #{user} mkdir #{user_home}/libs
 
       # zsh setup
-      sudo -u #{user} -i sh #{user_home}/repos/vagrantfiles/ubuntu2004/shell/setup_zshrc.sh #{user_home}
       chsh -s $(which zsh)
       chsh -s $(which zsh) #{user}
 
       # Anaconda setup
-      sudo -u #{user} -i sh #{user_home}/repos/vagrantfiles/ubuntu2004/shell/setup_anaconda.sh #{user} #{user_home}
+      sudo -u #{user} -i sh #{user_home}/temp/vagrantfiles/ubuntu2004/shell/setup_anaconda.sh #{user} #{user_home}
     SHELL
   end
 end
