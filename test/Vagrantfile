@@ -144,6 +144,7 @@ Vagrant.configure("2") do |config|
 
       # Anaconda setup
       sudo -u #{user} -i sh #{user_home}/temp/vagrantfiles/ubuntu2004/shell/setup_anaconda.sh #{user} #{user_home}
+      rm -rf #{user_home}/temp/vagrantfiles
     SHELL
   end
 end
