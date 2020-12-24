@@ -15,15 +15,15 @@
     - ~/repos : /home/vagrant/repos
     - ~/temp : /home/vagrant/temp
 
-- Install
-  - wget
+- Environments
+  - ubuntu2004
   - zsh
   - docker
   - docker-compose
   - npm
   - nodejs
   - Anaconda3
-    - grant access permission `sudo chown -R vagrant /home/vagrant/libs/anaconda3`
+
 
 ## Requirements
 
