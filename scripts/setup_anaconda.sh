@@ -19,3 +19,7 @@ send \"/home/vagrant/libs/anaconda3\n\"
 expect \">>>\"
 send \"yes\n\"
 "
+
+if [ -e $2/Anaconda3-2020.07-Linux-x86_64.sh ]; then
+  rm -rf $2/Anaconda3-2020.07-Linux-x86_64.sh
+fi

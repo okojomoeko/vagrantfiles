@@ -125,19 +125,28 @@ Vagrant.configure("2") do |config|
       apt purge -y nodejs
       npm install -g -y npm-check-updates
 
-      git clone https://github.com/okojomoeko/vagrantfiles.git
-      git clone https://github.com/okojomoeko/dotfiles.git
+      if [ ! -e #{user_home}/repos/dotfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/dotfiles.git #{user_home}/repos/dotfiles
+      fi
+      if [ ! -e #{user_home}/temp/vagrantfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/vagrantfiles.git #{user_home}/temp/vagrantfiles
+      fi
+
+      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zshrc #{user_home}/.zshrc
+      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zsh_aliases #{user_home}/.zsh_aliases
 
       # Create libs directory
       sudo -u #{user} mkdir #{user_home}/libs
 
       # zsh setup
-      sudo -u #{user} -i sh #{user_home}/repos/vagrantfiles/ubuntu2004/shell/setup_zshrc.sh #{user_home}
       chsh -s $(which zsh)
       chsh -s $(which zsh) #{user}
 
       # Anaconda setup
-      sudo -u #{user} -i sh #{user_home}/repos/vagrantfiles/ubuntu2004/shell/setup_anaconda.sh #{user} #{user_home}
+      sudo -u #{user} -i sh #{user_home}/temp/vagrantfiles/scripts/setup_anaconda.sh #{user} #{user_home}
+      sudo -u #{user} conda update --all -y
+
+      rm -rf #{user_home}/temp/vagrantfiles
     SHELL
   end
 end
