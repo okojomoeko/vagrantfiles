@@ -147,7 +147,7 @@ Vagrant.configure("2") do |config|
 
       # Anaconda setup
       sudo -u #{user} -i sh #{user_home}/temp/vagrantfiles/scripts/setup_anaconda.sh #{user} #{user_home}
-      sudo -u #{user} conda update --all -y
+      sudo -u #{user} -i conda update --all -y
 
       rm -rf #{user_home}/temp/vagrantfiles
     SHELL
