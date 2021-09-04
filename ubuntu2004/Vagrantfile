@@ -6,7 +6,7 @@ boxes = [
         :eth1 => "192.168.33.10",
         :mem => "4096",
         :cpu => "2",
-        :disk => "30GB"
+        :disk => "40GB"
     },
 ]
 
@@ -27,7 +27,7 @@ Vagrant.configure("2") do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "~/repos", "/home/vagrant/repos"
+
   config.vm.synced_folder "~/temp", "/home/vagrant/temp"
 
   boxes.each do |opts|
@@ -131,15 +131,15 @@ Vagrant.configure("2") do |config|
       apt purge -y nodejs
       npm install -g -y npm-check-updates
 
-      if [ ! -e #{user_home}/repos/dotfiles ]; then
-          sudo -u #{user} git clone https://github.com/okojomoeko/dotfiles.git #{user_home}/repos/dotfiles
+      if [ ! -e #{user_home}/work/dotfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/dotfiles.git #{user_home}/work/dotfiles
       fi
-      if [ ! -e #{user_home}/temp/vagrantfiles ]; then
-          sudo -u #{user} git clone https://github.com/okojomoeko/vagrantfiles.git #{user_home}/temp/vagrantfiles
+      if [ ! -e #{user_home}/work/vagrantfiles ]; then
+          sudo -u #{user} git clone https://github.com/okojomoeko/vagrantfiles.git #{user_home}/work/vagrantfiles
       fi
 
-      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zshrc #{user_home}/.zshrc
-      sudo -u #{user} ln -s #{user_home}/repos/dotfiles/zsh/.zsh_aliases #{user_home}/.zsh_aliases
+      sudo -u #{user} ln -s #{user_home}/work/dotfiles/zsh/.zshrc #{user_home}/.zshrc
+      sudo -u #{user} ln -s #{user_home}/work/dotfiles/zsh/.zsh_aliases #{user_home}/.zsh_aliases
 
       # Create libs directory
       sudo -u #{user} mkdir #{user_home}/libs
@@ -149,10 +149,10 @@ Vagrant.configure("2") do |config|
       chsh -s $(which zsh) #{user}
 
       # Anaconda setup
-      sudo -u #{user} -i sh #{user_home}/temp/vagrantfiles/scripts/setup_anaconda.sh #{user} #{user_home}
-      sudo -u #{user} -i conda update --all -y
+      sudo -u #{user} -i sh #{user_home}/work/vagrantfiles/scripts/setup_anaconda.sh #{user} #{user_home}
+      conda update --all -y
 
-      rm -rf #{user_home}/temp/vagrantfiles
+      rm -rf #{user_home}/work/vagrantfiles
     SHELL
   end
 end
