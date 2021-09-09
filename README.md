@@ -8,33 +8,29 @@
   - 8080: for http test
   - 4000: for DB server test
   - 3000: for react app
+  - 8000: for http local host
 
 - Shared folder
 
   - Host:Guest
-    - ~/repos : /home/vagrant/repos
     - ~/temp : /home/vagrant/temp
 
 - Environments
   - ubuntu2004
   - zsh
+    - default zshrc is [here](https://github.com/okojomoeko/dotfiles)
   - docker
   - docker-compose
   - npm
   - nodejs
   - Anaconda3
 
-
 ## Requirements
 
 ### Host OS Folder Structure
 
 - directory
-  - ~/repos
   - ~/temp
-- zsh
-  - ~/repos/dotfiles/zsh/.zshrc
-  - ~/repos/dotfiles/zsh/.zsh_aliases
 
 ### Vagrant plugins
 

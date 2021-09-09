@@ -1,13 +1,14 @@
 #!/usr/bin/zsh
+VERSION=Anaconda3-2020.07-Linux-x86_64
 # Install Anaconda for yourself
-if [ ! -e $2/Anaconda3-2020.07-Linux-x86_64.sh ]; then
-  wget https://repo.anaconda.com/archive/Anaconda3-2020.07-Linux-x86_64.sh -P $2
+if [ ! -e $2/$VERSION.sh ]; then
+  wget https://repo.anaconda.com/archive/$VERSION.sh -P $2
 
 fi
 
 sudo -u $1 expect -c "
 set timeout 360
-spawn /bin/sh $2/Anaconda3-2020.07-Linux-x86_64.sh
+spawn /bin/sh $2/$VERSION.sh
 expect \">>>\"
 send \"\n\"
 expect \":\"
@@ -20,6 +21,6 @@ expect \">>>\"
 send \"yes\n\"
 "
 
-if [ -e $2/Anaconda3-2020.07-Linux-x86_64.sh ]; then
-  rm -rf $2/Anaconda3-2020.07-Linux-x86_64.sh
+if [ -e $2/$VERSION.sh ]; then
+  rm -rf $2/$VERSION.sh
 fi
